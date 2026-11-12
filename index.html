@@ -1,0 +1,1743 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplikasi Kasir</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --teal:#1F5C66;
+  --dark:#143B42;
+  --bg:#F8F9FA;
+  --text:#263445;
+  --muted:#94A3B8;
+  --border:#E8EDF1;
+  --red:#DC5353;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  position:relative;
+  margin:0 auto;
+  max-width:480px;
+  min-height:100vh;
+  padding:20px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Plus Jakarta Sans',Arial,sans-serif;
+}
+
+button,input,select { font:inherit; }
+button { cursor:pointer; }
+
+.page { display:none; }
+.page.active { display:block; }
+
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:24px;
+}
+
+.header-date {
+  color:var(--muted);
+  font-size:11px;
+  font-weight:600;
+}
+
+.header h1 {
+  margin:5px 0 0;
+  color:var(--teal);
+  font-size:17px;
+}
+
+.avatar {
+  width:43px;
+  height:43px;
+  border:none;
+  padding:0;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#1F5C6618;
+  color:var(--teal);
+  font-weight:800;
+  overflow:hidden;
+  flex-shrink:0;
+  cursor:pointer;
+}
+
+.avatar img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
+
+.hero {
+  position:relative;
+  overflow:hidden;
+  padding:23px;
+  color:white;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--teal),var(--dark));
+  box-shadow:0 8px 20px #143B4220;
+  margin-bottom:25px;
+}
+
+.hero-label {
+  color:#BCE4E1;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.hero-total {
+  margin:9px 0 17px;
+  font-size:29px;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+
+.hero-bottom {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding-top:13px;
+  border-top:1px solid #ffffff25;
+  color:#D8EEEE;
+  font-size:11px;
+}
+
+.hero-bottom strong { color:white; }
+
+.clock {
+  margin-top:15px;
+  padding-top:12px;
+  border-top:1px solid #ffffff25;
+  color:#D8EEEE;
+  font-size:12px;
+}
+
+.clock strong {
+  display:block;
+  color:white;
+  font-size:23px;
+  margin-top:4px;
+}
+
+.section-title {
+  margin:22px 0 12px;
+  font-size:14px;
+  font-weight:800;
+}
+
+.menu-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.menu-card {
+  min-height:125px;
+  padding:15px;
+  border:1px solid var(--border);
+  border-radius:18px;
+  background:white;
+  text-align:left;
+  box-shadow:0 3px 10px #00000006;
+}
+
+.menu-card:active { transform:scale(.97); }
+
+.menu-icon {
+  display:grid;
+  place-items:center;
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  margin-bottom:12px;
+  font-size:21px;
+}
+
+.menu-card strong {
+  display:block;
+  font-size:13px;
+  color:#334155;
+}
+
+.menu-card small {
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.teal-icon { background:#E6F4F2; }
+.orange-icon { background:#FFF3DF; }
+.blue-icon { background:#EAF2FF; }
+.purple-icon { background:#F1EBFF; }
+
+.panel {
+  padding:17px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:17px;
+  margin-bottom:15px;
+  box-shadow:0 3px 12px #00000005;
+}
+
+.panel h2 {
+  margin:0 0 15px;
+  font-size:16px;
+}
+
+input,select {
+  width:100%;
+  padding:12px;
+  margin:6px 0 12px;
+  border:1px solid #DCE3E8;
+  border-radius:10px;
+  background:white;
+  color:var(--text);
+  outline:none;
+  font-size:13px;
+}
+
+input:focus,select:focus { border-color:var(--teal); }
+
+label {
+  display:block;
+  margin-top:9px;
+  color:#64748B;
+  font-size:12px;
+  font-weight:700;
+}
+
+.btn {
+  width:100%;
+  padding:13px;
+  border:none;
+  border-radius:11px;
+  background:var(--teal);
+  color:white;
+  font-size:13px;
+  font-weight:800;
+  margin-top:7px;
+}
+
+.btn-secondary {
+  background:#EAF1F2;
+  color:var(--teal);
+}
+
+.btn-danger {
+  background:#FDECEC;
+  color:var(--red);
+}
+
+.btn-small {
+  width:auto;
+  padding:8px 11px;
+  font-size:11px;
+}
+
+.row {
+  display:flex;
+  gap:8px;
+}
+
+.row>* {
+  flex:1;
+  min-width:0;
+}
+
+.total-line {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:8px 0;
+  font-size:13px;
+}
+
+.total-line.final {
+  border-top:1px solid var(--border);
+  margin-top:7px;
+  padding-top:13px;
+  font-size:16px;
+  font-weight:800;
+  color:var(--teal);
+}
+
+.badge {
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  background:#E6F4EF;
+  color:#13835F;
+  font-size:10px;
+  font-weight:800;
+}
+
+.back-btn {
+  display:inline-block;
+  border:none;
+  background:transparent;
+  color:var(--teal);
+  font-size:13px;
+  font-weight:800;
+  padding:0;
+  margin:0 0 17px;
+}
+
+.empty {
+  padding:18px 5px;
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.muted {
+  color:var(--muted);
+  font-size:11px;
+}
+
+.item-row,.history-item {
+  padding:12px 0;
+  border-bottom:1px solid #EDF0F2;
+  font-size:12px;
+}
+
+.item-row:last-child,.history-item:last-child {
+  border-bottom:none;
+}
+
+.item-row strong,.history-item strong {
+  display:block;
+  margin-bottom:4px;
+}
+
+.note {
+  margin:14px 0;
+  text-align:center;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.receipt {
+  background:white;
+  padding:18px;
+  border:1px dashed #B8C4CC;
+  border-radius:10px;
+  font-size:12px;
+  line-height:1.7;
+}
+
+.receipt h2 {
+  text-align:center;
+  margin:0;
+  color:var(--teal);
+}
+
+.receipt hr {
+  border:none;
+  border-top:1px dashed #AAB5BD;
+  margin:10px 0;
+}
+
+/* LOGIN */
+.login-logo {
+  width:65px;
+  height:65px;
+  display:grid;
+  place-items:center;
+  margin:25px auto 15px;
+  border-radius:20px;
+  background:#1F5C6618;
+  font-size:30px;
+}
+
+.login-title {
+  text-align:center;
+  font-size:22px;
+  color:var(--teal);
+  margin:0 0 6px;
+}
+
+.login-subtitle {
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:22px;
+}
+
+.login-panel {
+  padding:22px;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:20px;
+  box-shadow:0 5px 20px #00000008;
+}
+
+.login-message {
+  padding:11px;
+  border-radius:10px;
+  background:#EAF4F4;
+  color:var(--teal);
+  font-size:11px;
+  line-height:1.6;
+  margin-bottom:14px;
+}
+
+.hidden { display:none !important; }
+
+.user-info {
+  font-size:11px;
+  color:#64748B;
+  margin-top:7px;
+}
+
+/* MENU PROFIL */
+.profile-menu {
+  position:absolute;
+  z-index:100;
+  top:75px;
+  right:max(20px, calc((100vw - 440px) / 2));
+  width:225px;
+  padding:10px;
+  background:white;
+  border:1px solid #E8EDF1;
+  border-radius:15px;
+  box-shadow:0 8px 25px #00000018;
+}
+
+.profile-menu-header {
+  padding:12px;
+  border-bottom:1px solid #EDF0F2;
+  margin-bottom:5px;
+}
+
+.profile-menu-header strong {
+  display:block;
+  color:#1F5C66;
+  font-size:13px;
+}
+
+.profile-menu-header small {
+  display:block;
+  margin-top:4px;
+  color:#94A3B8;
+  font-size:11px;
+}
+
+.profile-menu button {
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:9px;
+  background:white;
+  text-align:left;
+  color:#334155;
+  font-size:12px;
+  font-weight:600;
+}
+
+.profile-menu button:active { background:#F1F5F9; }
+
+.profile-menu .profile-delete {
+  color:#DC5353;
+  border-top:1px solid #EDF0F2;
+  border-radius:0;
+}
+
+/* MODAL PROFIL */
+.profile-modal {
+  position:fixed;
+  z-index:200;
+  inset:0;
+  padding:20px;
+  background:#00000070;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.profile-modal.hidden { display:none; }
+
+.profile-modal-content {
+  width:100%;
+  max-width:400px;
+  max-height:90vh;
+  overflow-y:auto;
+  padding:22px;
+  background:white;
+  border-radius:18px;
+}
+
+.profile-modal-content h2 {
+  margin:0 0 15px;
+  color:#1F5C66;
+  font-size:18px;
+}
+
+.profile-photo-preview {
+  display:flex;
+  justify-content:center;
+  margin:12px 0;
+}
+
+.profile-preview-avatar {
+  width:75px;
+  height:75px;
+  font-size:22px;
+  cursor:default;
+}
+
+.profile-menu,
+.profile-modal-content {
+  font-family:'Plus Jakarta Sans',Arial,sans-serif;
+}
+
+@media print {
+  body { max-width:100%; padding:0; background:white; }
+  body * { visibility:hidden; }
+  #struk,#struk * { visibility:visible; }
+  #struk {
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    border:none;
+  }
+  .no-print { display:none !important; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<section id="loginScreen" class="page active">
+
+  <div class="login-logo">🛒</div>
+  <h1 class="login-title">Aplikasi Kasir</h1>
+  <p class="login-subtitle">Silakan masuk menggunakan akun kasir</p>
+
+  <div class="login-panel">
+
+    <div id="formLogin">
+      <h2>Login Kasir</h2>
+      <div class="login-message">
+        Masukkan username dan PIN untuk masuk ke aplikasi.
+      </div>
+
+      <label>Username</label>
+      <input id="loginUsername" placeholder="Masukkan username" autocomplete="username">
+
+      <label>PIN 4 Digit</label>
+      <input id="loginPin" type="password" inputmode="numeric"
+        maxlength="4" placeholder="Masukkan PIN" autocomplete="current-password">
+
+      <button class="btn" onclick="loginKasir()">Masuk ke Aplikasi</button>
+
+      <button class="btn btn-secondary" onclick="tampilkanFormDaftar()">
+        + Tambah Profil Kasir
+      </button>
+    </div>
+
+    <div id="formDaftar" class="hidden">
+      <h2 id="judulDaftar">Buat Profil Kasir</h2>
+
+      <div class="login-message" id="pesanDaftar">
+        Buat akun kasir pertama untuk mulai menggunakan aplikasi.
+      </div>
+
+      <label>Nama Kasir</label>
+      <input id="daftarNama" placeholder="Contoh: Andi">
+
+      <label>Username</label>
+      <input id="daftarUsername" placeholder="Contoh: andi123" autocomplete="username">
+
+      <label>PIN 4 Digit</label>
+      <input id="daftarPin" type="password" inputmode="numeric"
+        maxlength="4" placeholder="Buat PIN 4 digit">
+
+      <label>Ulangi PIN</label>
+      <input id="daftarPinUlang" type="password" inputmode="numeric"
+        maxlength="4" placeholder="Masukkan PIN sekali lagi">
+
+      <button class="btn" onclick="daftarKasir()">Simpan Profil Kasir</button>
+      <button class="btn btn-secondary" onclick="kembaliLogin()">Kembali</button>
+    </div>
+
+  </div>
+
+  <p class="note">Profil kasir tersimpan di perangkat ini.</p>
+</section>
+
+<!-- HEADER APLIKASI -->
+<header class="header hidden" id="appHeader">
+  <div>
+    <div class="header-date" id="tanggalHeader"></div>
+    <h1 id="sapaanKasir">Halo, Kasir 👋</h1>
+    <div class="user-info" id="usernameAktif"></div>
+  </div>
+
+  <button class="avatar" id="avatarKasir"
+    onclick="toggleMenuProfil()" aria-label="Menu profil kasir">KU</button>
+</header>
+
+<!-- MENU PROFIL KASIR -->
+<div id="menuProfil" class="profile-menu hidden">
+  <div class="profile-menu-header">
+    <strong id="menuNamaKasir">Nama Kasir</strong>
+    <small id="menuUsername">@username</small>
+  </div>
+
+  <button onclick="bukaEditProfil()">✏️ Edit Profil</button>
+  <button onclick="bukaEditPIN()">🔐 Edit PIN</button>
+  <button onclick="logoutKasir()">🔄 Ganti Kasir / Logout</button>
+  <button class="profile-delete" onclick="hapusProfilAktif()">🗑️ Hapus Profil</button>
+</div>
+
+<!-- MODAL EDIT PROFIL -->
+<div id="modalProfil" class="profile-modal hidden">
+  <div class="profile-modal-content">
+    <h2>Edit Profil Kasir</h2>
+
+    <label>Foto Profil</label>
+    <div class="profile-photo-preview">
+      <div id="previewFoto" class="avatar profile-preview-avatar">KU</div>
+    </div>
+
+    <input type="file" id="fotoKasir" accept="image/*">
+    <button class="btn btn-secondary" onclick="hapusFotoProfil()">Hapus Foto</button>
+
+    <label>Nama Kasir</label>
+    <input id="editNama" placeholder="Nama kasir">
+
+    <label>Username</label>
+    <input id="editUsername" placeholder="Username">
+
+    <button class="btn" onclick="simpanEditProfil()">Simpan Perubahan</button>
+    <button class="btn btn-secondary" onclick="tutupModalProfil()">Batal</button>
+  </div>
+</div>
+
+<!-- MODAL EDIT PIN -->
+<div id="modalPIN" class="profile-modal hidden">
+  <div class="profile-modal-content">
+    <h2>Ganti PIN Kasir</h2>
+
+    <label>PIN Lama</label>
+    <input id="pinLama" type="password" inputmode="numeric"
+      maxlength="4" placeholder="Masukkan PIN lama">
+
+    <label>PIN Baru</label>
+    <input id="pinBaru" type="password" inputmode="numeric"
+      maxlength="4" placeholder="Masukkan PIN baru">
+
+    <label>Ulangi PIN Baru</label>
+    <input id="pinBaruUlang" type="password" inputmode="numeric"
+      maxlength="4" placeholder="Ulangi PIN baru">
+
+    <button class="btn" onclick="simpanPINBaru()">Simpan PIN Baru</button>
+    <button class="btn btn-secondary" onclick="tutupModalProfil()">Batal</button>
+  </div>
+</div>
+
+<!-- HOMEPAGE -->
+<section id="home" class="page">
+
+  <div class="hero">
+    <div class="hero-label">Total Penjualan Hari Ini</div>
+    <div class="hero-total" id="jumlahPenjualan">Rp0</div>
+
+    <div class="hero-bottom">
+      <span>Jumlah Transaksi: <strong id="jumlahTransaksi">0</strong></span>
+      <span>● Toko Buka</span>
+    </div>
+
+    <div class="clock">
+      <span id="tanggalSekarang"></span>
+      <strong id="jamSekarang">00:00:00</strong>
+    </div>
+  </div>
+
+  <div class="section-title">Menu Utama</div>
+
+  <div class="menu-grid">
+    <button class="menu-card" onclick="bukaHalaman('kasir')">
+      <span class="menu-icon teal-icon">🛒</span>
+      <strong>Kasir</strong>
+      <small>Buat transaksi baru</small>
+    </button>
+
+    <button class="menu-card" onclick="bukaHalaman('diskon')">
+      <span class="menu-icon orange-icon">🏷️</span>
+      <strong>Diskon</strong>
+      <small>Kelola potongan harga</small>
+    </button>
+
+    <button class="menu-card" onclick="bukaHalaman('pembayaran')">
+      <span class="menu-icon blue-icon">💳</span>
+      <strong>Pembayaran</strong>
+      <small>Proses pembayaran</small>
+    </button>
+
+    <button class="menu-card" onclick="bukaHalaman('riwayat')">
+      <span class="menu-icon purple-icon">📋</span>
+      <strong>Riwayat</strong>
+      <small>Cek laporan transaksi</small>
+    </button>
+  </div>
+
+  <div class="section-title">Ringkasan Penjualan</div>
+
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <strong style="font-size:13px">Penjualan Hari Ini</strong>
+      <span class="badge">HARI INI</span>
+    </div>
+    <p class="muted" id="tanggalLaporan"></p>
+    <div class="total-line">
+      <span>Total Penjualan</span>
+      <strong id="ringkasanTotal">Rp0</strong>
+    </div>
+    <div class="total-line">
+      <span>Jumlah Transaksi</span>
+      <strong id="ringkasanTransaksi">0 transaksi</strong>
+    </div>
+  </div>
+
+  <div class="note">Aplikasi Kasir • Pengelolaan Penjualan</div>
+</section>
+
+<!-- KASIR -->
+<section id="kasir" class="page">
+  <button class="back-btn" onclick="bukaHalaman('home')">← Kembali ke Beranda</button>
+
+  <div class="panel">
+    <h2>🛒 Kasir</h2>
+    <label>Nama Barang</label>
+    <input id="namaBarang" placeholder="Contoh: Indomie Ayam Bawang">
+
+    <div class="row">
+      <div>
+        <label>Harga Barang (Rp)</label>
+        <input id="hargaBarang" type="number" min="0" placeholder="3500">
+      </div>
+      <div>
+        <label>Jumlah</label>
+        <input id="jumlahBarang" type="number" min="1" value="1">
+      </div>
+    </div>
+
+    <button class="btn" onclick="tambahBarang()">+ Tambahkan Barang</button>
+  </div>
+
+  <div class="panel">
+    <h2>Daftar Belanja</h2>
+    <div id="daftarBarang" class="empty">Belum ada barang ditambahkan.</div>
+
+    <div class="total-line">
+      <span>Subtotal</span><strong id="subtotal">Rp0</strong>
+    </div>
+    <div class="total-line">
+      <span>Diskon</span><strong id="diskonTampil">0%</strong>
+    </div>
+    <div class="total-line final">
+      <span>Total</span><strong id="totalAkhir">Rp0</strong>
+    </div>
+
+    <button class="btn btn-secondary" onclick="bukaHalaman('diskon')">Atur Diskon</button>
+    <button class="btn" onclick="bukaHalaman('pembayaran')">Lanjut ke Pembayaran →</button>
+  </div>
+</section>
+
+<!-- DISKON -->
+<section id="diskon" class="page">
+  <button class="back-btn" onclick="bukaHalaman('home')">← Kembali ke Beranda</button>
+
+  <div class="panel">
+    <h2>🏷️ Pengaturan Diskon</h2>
+    <p class="muted">Diskon hanya diterapkan jika kamu mengaturnya sendiri.</p>
+
+    <label>Diskon (%)</label>
+    <input id="inputDiskon" type="number" min="0" max="100" placeholder="Contoh: 10">
+
+    <button class="btn" onclick="terapkanDiskon()">Terapkan Diskon</button>
+    <button class="btn btn-secondary" onclick="hapusDiskon()">Hapus Diskon</button>
+    <p class="muted" id="statusDiskon">Diskon saat ini: 0%</p>
+  </div>
+</section>
+
+<!-- PEMBAYARAN -->
+<section id="pembayaran" class="page">
+  <button class="back-btn" onclick="bukaHalaman('home')">← Kembali ke Beranda</button>
+
+  <div class="panel">
+    <h2>💳 Pembayaran</h2>
+    <div class="total-line">
+      <span>Total Belanja</span><strong id="totalBayar">Rp0</strong>
+    </div>
+
+    <label>Nama Pembeli</label>
+    <input id="namaPembeli" placeholder="Masukkan nama pembeli">
+
+    <label>Uang Dibayarkan (Rp)</label>
+    <input id="uangBayar" type="number" min="0"
+      placeholder="Masukkan uang pembayaran" oninput="hitungKembalian()">
+
+    <div class="total-line">
+      <span>Kembalian</span><strong id="kembalian">Rp0</strong>
+    </div>
+
+    <button class="btn" onclick="prosesPembayaran()">Selesaikan Pembayaran</button>
+  </div>
+
+  <div id="struk" class="receipt" style="display:none">
+    <h2>STRUK PEMBELIAN</h2>
+    <p style="text-align:center">Terima kasih telah berbelanja</p>
+    <hr>
+    <div id="isiStruk"></div>
+  </div>
+
+  <button id="tombolCetak" class="btn btn-secondary no-print"
+    style="display:none" onclick="window.print()">🖨️ Cetak Struk</button>
+</section>
+
+<!-- RIWAYAT -->
+<section id="riwayat" class="page">
+  <button class="back-btn" onclick="bukaHalaman('home')">← Kembali ke Beranda</button>
+
+  <div class="panel">
+    <h2>📋 Riwayat Transaksi</h2>
+
+    <label>Cari Nama Pembeli</label>
+    <input id="cariNama" placeholder="Ketik nama pembeli..." oninput="tampilkanRiwayat()">
+
+    <label>Cari Nama Kasir</label>
+    <input id="cariKasir" placeholder="Ketik nama kasir..." oninput="tampilkanRiwayat()">
+
+    <label>Cari Tanggal</label>
+    <input id="cariTanggal" type="date" onchange="tampilkanRiwayat()">
+
+    <div class="row">
+      <div>
+        <label>Bulan</label>
+        <select id="cariBulan" onchange="tampilkanRiwayat()">
+          <option value="">Semua Bulan</option>
+          <option value="0">Januari</option>
+          <option value="1">Februari</option>
+          <option value="2">Maret</option>
+          <option value="3">April</option>
+          <option value="4">Mei</option>
+          <option value="5">Juni</option>
+          <option value="6">Juli</option>
+          <option value="7">Agustus</option>
+          <option value="8">September</option>
+          <option value="9">Oktober</option>
+          <option value="10">November</option>
+          <option value="11">Desember</option>
+        </select>
+      </div>
+      <div>
+        <label>Tahun</label>
+        <input id="cariTahun" type="number" placeholder="Contoh: 2026"
+          oninput="tampilkanRiwayat()">
+      </div>
+    </div>
+
+    <button class="btn btn-secondary" onclick="resetPencarian()">Reset Pencarian</button>
+  </div>
+
+  <div class="panel">
+    <h2>Hasil Pencarian</h2>
+    <div id="daftarRiwayat" class="empty">Belum ada transaksi.</div>
+  </div>
+</section>
+
+<script>
+const KUNCI_RIWAYAT = "riwayatTransaksi";
+const KUNCI_KASIR = "profilKasir";
+
+let keranjang = [];
+let diskonAktif = 0;
+let riwayat = [];
+let kasirAktif = null;
+let fotoSementara = null;
+
+function rupiah(angka) {
+  return "Rp" + Number(angka || 0).toLocaleString("id-ID");
+}
+
+function escapeHTML(teks) {
+  return String(teks ?? "").replace(/[&<>"']/g, karakter => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[karakter]);
+}
+
+/* ===== SISTEM PROFIL KASIR ===== */
+
+function ambilProfilKasir() {
+  try {
+    const data = JSON.parse(localStorage.getItem(KUNCI_KASIR) || "[]");
+    return Array.isArray(data) ? data : [];
+  } catch(e) {
+    return [];
+  }
+}
+
+function simpanProfilKasir(data) {
+  localStorage.setItem(KUNCI_KASIR, JSON.stringify(data));
+}
+
+function periksaLoginAwal() {
+  const profil = ambilProfilKasir();
+
+  document.getElementById("formLogin").classList.toggle("hidden", profil.length === 0);
+  document.getElementById("formDaftar").classList.toggle("hidden", profil.length !== 0);
+
+  if (profil.length === 0) {
+    document.getElementById("judulDaftar").textContent = "Buat Akun Kasir Pertama";
+    document.getElementById("pesanDaftar").textContent =
+      "Belum ada akun. Buat profil kasir pertama untuk mulai menggunakan aplikasi.";
+  }
+}
+
+function tampilkanFormDaftar() {
+  document.getElementById("formLogin").classList.add("hidden");
+  document.getElementById("formDaftar").classList.remove("hidden");
+  document.getElementById("judulDaftar").textContent = "Tambah Profil Kasir";
+  document.getElementById("pesanDaftar").textContent =
+    "Buat username dan PIN untuk kasir baru.";
+}
+
+function kembaliLogin() {
+  document.getElementById("formDaftar").classList.add("hidden");
+  document.getElementById("formLogin").classList.remove("hidden");
+  periksaLoginAwal();
+}
+
+function daftarKasir() {
+  const nama = document.getElementById("daftarNama").value.trim();
+  const username = document.getElementById("daftarUsername").value.trim().toLowerCase();
+  const pin = document.getElementById("daftarPin").value;
+  const ulang = document.getElementById("daftarPinUlang").value;
+
+  if (!nama || !username || !pin || !ulang) {
+    alert("Semua kolom harus diisi.");
+    return;
+  }
+
+  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+    alert("Username harus 3–20 karakter dan hanya boleh berisi huruf, angka, atau garis bawah.");
+    return;
+  }
+
+  if (!/^[0-9]{4}$/.test(pin)) {
+    alert("PIN harus tepat 4 angka.");
+    return;
+  }
+
+  if (pin !== ulang) {
+    alert("PIN dan ulangi PIN tidak sama.");
+    return;
+  }
+
+  const profil = ambilProfilKasir();
+
+  if (profil.some(p => p.username === username)) {
+    alert("Username sudah digunakan. Silakan pilih username lain.");
+    return;
+  }
+
+  profil.push({
+    id:Date.now(),
+    nama:nama,
+    username:username,
+    pin:pin,
+    foto:null
+  });
+
+  simpanProfilKasir(profil);
+
+  alert("Profil kasir berhasil dibuat!");
+
+  document.getElementById("daftarNama").value = "";
+  document.getElementById("daftarUsername").value = "";
+  document.getElementById("daftarPin").value = "";
+  document.getElementById("daftarPinUlang").value = "";
+
+  document.getElementById("formDaftar").classList.add("hidden");
+  document.getElementById("formLogin").classList.remove("hidden");
+  periksaLoginAwal();
+}
+
+function loginKasir() {
+  const username = document.getElementById("loginUsername").value.trim().toLowerCase();
+  const pin = document.getElementById("loginPin").value;
+
+  if (!username || !pin) {
+    alert("Masukkan username dan PIN.");
+    return;
+  }
+
+  const profil = ambilProfilKasir();
+  const akun = profil.find(p => p.username === username && p.pin === pin);
+
+  if (!akun) {
+    alert("Username atau PIN salah.");
+    return;
+  }
+
+  kasirAktif = akun;
+
+  document.getElementById("loginUsername").value = "";
+  document.getElementById("loginPin").value = "";
+
+  document.getElementById("loginScreen").classList.remove("active");
+  document.getElementById("appHeader").classList.remove("hidden");
+
+  perbaruiIdentitasKasir();
+  bukaHalaman("home");
+  perbaruiJam();
+}
+
+/* ===== MENU DAN FOTO PROFIL ===== */
+
+function toggleMenuProfil() {
+  if (!kasirAktif) return;
+
+  const menu = document.getElementById("menuProfil");
+  menu.classList.toggle("hidden");
+
+  document.getElementById("menuNamaKasir").textContent = kasirAktif.nama;
+  document.getElementById("menuUsername").textContent = "@" + kasirAktif.username;
+}
+
+function tutupMenuProfil() {
+  document.getElementById("menuProfil").classList.add("hidden");
+}
+
+document.addEventListener("click", function(event) {
+  const menu = document.getElementById("menuProfil");
+  const avatar = document.getElementById("avatarKasir");
+
+  if (!menu || !avatar) return;
+
+  if (!menu.contains(event.target) && !avatar.contains(event.target)) {
+    tutupMenuProfil();
+  }
+});
+
+function isiAvatar(elemen, foto, nama) {
+  const inisial = String(nama || "KU").trim().substring(0,2).toUpperCase();
+
+  if (foto) {
+    elemen.innerHTML = '<img src="' + escapeHTML(foto) + '" alt="Foto profil">';
+  } else {
+    elemen.textContent = inisial || "KU";
+  }
+}
+
+function tampilkanAvatar() {
+  if (!kasirAktif) return;
+
+  isiAvatar(
+    document.getElementById("avatarKasir"),
+    kasirAktif.foto,
+    kasirAktif.nama
+  );
+}
+
+function perbaruiIdentitasKasir() {
+  if (!kasirAktif) return;
+
+  document.getElementById("sapaanKasir").textContent =
+    "Halo, " + kasirAktif.nama + " 👋";
+
+  document.getElementById("usernameAktif").textContent =
+    "Username: @" + kasirAktif.username;
+
+  document.getElementById("menuNamaKasir").textContent = kasirAktif.nama;
+  document.getElementById("menuUsername").textContent = "@" + kasirAktif.username;
+
+  tampilkanAvatar();
+}
+
+/* ===== EDIT PROFIL ===== */
+
+function bukaEditProfil() {
+  if (!kasirAktif) return;
+
+  tutupMenuProfil();
+
+  fotoSementara = kasirAktif.foto || null;
+
+  document.getElementById("editNama").value = kasirAktif.nama;
+  document.getElementById("editUsername").value = kasirAktif.username;
+
+  isiAvatar(
+    document.getElementById("previewFoto"),
+    fotoSementara,
+    kasirAktif.nama
+  );
+
+  document.getElementById("fotoKasir").value = "";
+  document.getElementById("modalProfil").classList.remove("hidden");
+}
+
+function tutupModalProfil() {
+  document.getElementById("modalProfil").classList.add("hidden");
+  document.getElementById("modalPIN").classList.add("hidden");
+  fotoSementara = null;
+}
+
+document.getElementById("fotoKasir").addEventListener("change", function() {
+  const file = this.files && this.files[0];
+
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("File harus berupa gambar.");
+    this.value = "";
+    return;
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    alert("Ukuran foto maksimal 2 MB.");
+    this.value = "";
+    return;
+  }
+
+  const pembaca = new FileReader();
+
+  pembaca.onload = function() {
+    fotoSementara = pembaca.result;
+
+    isiAvatar(
+      document.getElementById("previewFoto"),
+      fotoSementara,
+      document.getElementById("editNama").value
+    );
+  };
+
+  pembaca.onerror = function() {
+    alert("Foto gagal dibaca. Silakan coba lagi.");
+  };
+
+  pembaca.readAsDataURL(file);
+});
+
+document.getElementById("editNama").addEventListener("input", function() {
+  if (!fotoSementara) {
+    isiAvatar(
+      document.getElementById("previewFoto"),
+      null,
+      this.value
+    );
+  }
+});
+
+function hapusFotoProfil() {
+  fotoSementara = null;
+  document.getElementById("fotoKasir").value = "";
+
+  isiAvatar(
+    document.getElementById("previewFoto"),
+    null,
+    document.getElementById("editNama").value
+  );
+}
+
+function simpanEditProfil() {
+  if (!kasirAktif) return;
+
+  const nama = document.getElementById("editNama").value.trim();
+  const username = document.getElementById("editUsername").value.trim().toLowerCase();
+
+  if (!nama || !username) {
+    alert("Nama dan username wajib diisi.");
+    return;
+  }
+
+  if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
+    alert("Username harus 3–20 karakter dan hanya boleh berisi huruf, angka, atau garis bawah.");
+    return;
+  }
+
+  const profil = ambilProfilKasir();
+
+  const usernameDipakai = profil.some(p =>
+    p.username === username && p.id !== kasirAktif.id
+  );
+
+  if (usernameDipakai) {
+    alert("Username sudah digunakan oleh kasir lain.");
+    return;
+  }
+
+  const index = profil.findIndex(p => p.id === kasirAktif.id);
+
+  if (index === -1) {
+    alert("Profil kasir tidak ditemukan.");
+    return;
+  }
+
+  profil[index].nama = nama;
+  profil[index].username = username;
+  profil[index].foto = fotoSementara;
+
+  simpanProfilKasir(profil);
+  kasirAktif = profil[index];
+
+  tutupModalProfil();
+  perbaruiIdentitasKasir();
+
+  alert("Profil berhasil diperbarui.");
+}
+
+/* ===== EDIT PIN ===== */
+
+function bukaEditPIN() {
+  if (!kasirAktif) return;
+
+  tutupMenuProfil();
+
+  document.getElementById("pinLama").value = "";
+  document.getElementById("pinBaru").value = "";
+  document.getElementById("pinBaruUlang").value = "";
+
+  document.getElementById("modalPIN").classList.remove("hidden");
+}
+
+function simpanPINBaru() {
+  if (!kasirAktif) return;
+
+  const lama = document.getElementById("pinLama").value;
+  const baru = document.getElementById("pinBaru").value;
+  const ulang = document.getElementById("pinBaruUlang").value;
+
+  if (!lama || !baru || !ulang) {
+    alert("Semua kolom PIN harus diisi.");
+    return;
+  }
+
+  if (lama !== kasirAktif.pin) {
+    alert("PIN lama yang kamu masukkan salah.");
+    return;
+  }
+
+  if (!/^[0-9]{4}$/.test(baru)) {
+    alert("PIN baru harus tepat 4 angka.");
+    return;
+  }
+
+  if (baru !== ulang) {
+    alert("PIN baru dan ulangi PIN tidak sama.");
+    return;
+  }
+
+  const profil = ambilProfilKasir();
+  const index = profil.findIndex(p => p.id === kasirAktif.id);
+
+  if (index === -1) {
+    alert("Profil kasir tidak ditemukan.");
+    return;
+  }
+
+  profil[index].pin = baru;
+  simpanProfilKasir(profil);
+  kasirAktif = profil[index];
+
+  tutupModalProfil();
+  alert("PIN berhasil diganti.");
+}
+
+/* ===== HAPUS PROFIL ===== */
+
+function hapusProfilAktif() {
+  if (!kasirAktif) return;
+
+  tutupMenuProfil();
+
+  const yakin = confirm(
+    "Yakin ingin menghapus profil " + kasirAktif.nama +
+    "?\n\nRiwayat transaksi yang pernah dilakukan kasir ini TIDAK akan dihapus."
+  );
+
+  if (!yakin) return;
+
+  const profil = ambilProfilKasir().filter(p => p.id !== kasirAktif.id);
+
+  simpanProfilKasir(profil);
+
+  kasirAktif = null;
+  keranjang = [];
+  diskonAktif = 0;
+
+  document.getElementById("appHeader").classList.add("hidden");
+
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("loginScreen").classList.add("active");
+
+  periksaLoginAwal();
+
+  alert("Profil berhasil dihapus. Riwayat transaksi tetap tersimpan.");
+}
+
+/* ===== LOGOUT / GANTI KASIR ===== */
+
+function logoutKasir() {
+  if (!confirm("Yakin ingin keluar dan berganti kasir?")) return;
+
+  kasirAktif = null;
+  keranjang = [];
+  diskonAktif = 0;
+
+  tutupMenuProfil();
+  tutupModalProfil();
+
+  document.getElementById("appHeader").classList.add("hidden");
+
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("loginScreen").classList.add("active");
+
+  periksaLoginAwal();
+}
+
+/* ===== NAVIGASI ===== */
+
+function bukaHalaman(nama) {
+  if (!kasirAktif) {
+    alert("Silakan login terlebih dahulu.");
+    return;
+  }
+
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+
+  const halaman = document.getElementById(nama);
+  if (halaman) halaman.classList.add("active");
+
+  if (nama === "kasir") tampilkanKeranjang();
+
+  if (nama === "diskon") {
+    document.getElementById("inputDiskon").value = diskonAktif || "";
+    document.getElementById("statusDiskon").textContent =
+      "Diskon saat ini: " + diskonAktif + "%";
+  }
+
+  if (nama === "pembayaran") {
+    document.getElementById("totalBayar").textContent = rupiah(hitungTotal());
+    hitungKembalian();
+  }
+
+  if (nama === "riwayat") tampilkanRiwayat();
+
+  window.scrollTo(0, 0);
+}
+
+/* ===== PENYIMPANAN TRANSAKSI ===== */
+
+function ambilRiwayat() {
+  try {
+    const data = JSON.parse(localStorage.getItem(KUNCI_RIWAYAT) || "[]");
+    return Array.isArray(data) ? data : [];
+  } catch(e) {
+    return [];
+  }
+}
+
+function simpanRiwayat() {
+  localStorage.setItem(KUNCI_RIWAYAT, JSON.stringify(riwayat));
+}
+
+function waktuTransaksi(t) {
+  if (t.waktu) {
+    const d = new Date(t.waktu);
+    if (!isNaN(d.getTime())) return d;
+  }
+
+  if (t.nomor && !isNaN(Number(t.nomor))) {
+    const d = new Date(Number(t.nomor));
+    if (!isNaN(d.getTime())) return d;
+  }
+
+  if (t.tanggal) {
+    const d = new Date(t.tanggal);
+    if (!isNaN(d.getTime())) return d;
+  }
+
+  return null;
+}
+
+function tanggalKunci(d) {
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+    String(d.getDate()).padStart(2, "0");
+}
+
+/* ===== JAM DAN RINGKASAN ===== */
+
+function perbaruiJam() {
+  const sekarang = new Date();
+
+  const tanggal = sekarang.toLocaleDateString("id-ID", {
+    weekday:"long",
+    day:"numeric",
+    month:"long",
+    year:"numeric"
+  });
+
+  const jam = sekarang.toLocaleTimeString("id-ID", {
+    hour:"2-digit",
+    minute:"2-digit",
+    second:"2-digit",
+    hour12:false
+  });
+
+  document.getElementById("tanggalHeader").textContent = tanggal;
+  document.getElementById("tanggalSekarang").textContent = tanggal;
+  document.getElementById("jamSekarang").textContent = jam;
+  document.getElementById("tanggalLaporan").textContent = tanggal;
+
+  perbaruiRingkasan();
+}
+
+function perbaruiRingkasan() {
+  riwayat = ambilRiwayat();
+
+  const hariIni = tanggalKunci(new Date());
+
+  const transaksiHariIni = riwayat.filter(t => {
+    const waktu = waktuTransaksi(t);
+    return waktu && tanggalKunci(waktu) === hariIni;
+  });
+
+  const total = transaksiHariIni.reduce((jumlah,t) =>
+    jumlah + Number(t.total || 0), 0
+  );
+
+  document.getElementById("jumlahPenjualan").textContent = rupiah(total);
+  document.getElementById("jumlahTransaksi").textContent = transaksiHariIni.length;
+  document.getElementById("ringkasanTotal").textContent = rupiah(total);
+  document.getElementById("ringkasanTransaksi").textContent =
+    transaksiHariIni.length + " transaksi";
+}
+
+/* ===== KERANJANG ===== */
+
+function tambahBarang() {
+  const nama = document.getElementById("namaBarang").value.trim();
+  const harga = Number(document.getElementById("hargaBarang").value);
+  const jumlah = Number(document.getElementById("jumlahBarang").value);
+
+  if (!nama) {
+    alert("Nama barang harus diisi.");
+    return;
+  }
+
+  if (!Number.isFinite(harga) || harga <= 0) {
+    alert("Masukkan harga barang yang benar.");
+    return;
+  }
+
+  if (!Number.isInteger(jumlah) || jumlah <= 0) {
+    alert("Jumlah barang minimal 1.");
+    return;
+  }
+
+  keranjang.push({
+    id:Date.now() + Math.random(),
+    nama,
+    harga,
+    jumlah
+  });
+
+  document.getElementById("namaBarang").value = "";
+  document.getElementById("hargaBarang").value = "";
+  document.getElementById("jumlahBarang").value = "1";
+
+  tampilkanKeranjang();
+}
+
+function hapusBarang(id) {
+  keranjang = keranjang.filter(b => b.id !== id);
+  tampilkanKeranjang();
+}
+
+function hitungSubtotal() {
+  return keranjang.reduce((total,b) => total + b.harga * b.jumlah, 0);
+}
+
+function hitungPotongan() {
+  return Math.round(hitungSubtotal() * diskonAktif / 100);
+}
+
+function hitungTotal() {
+  return Math.max(0, hitungSubtotal() - hitungPotongan());
+}
+
+function tampilkanKeranjang() {
+  const wadah = document.getElementById("daftarBarang");
+
+  if (keranjang.length === 0) {
+    wadah.innerHTML = '<div class="empty">Belum ada barang ditambahkan.</div>';
+  } else {
+    wadah.innerHTML = keranjang.map(b => `
+      <div class="item-row">
+        <div style="display:flex;justify-content:space-between;gap:8px">
+          <div>
+            <strong>${escapeHTML(b.nama)}</strong>
+            <span class="muted">${rupiah(b.harga)} × ${b.jumlah}</span>
+          </div>
+          <div style="text-align:right">
+            <strong>${rupiah(b.harga * b.jumlah)}</strong>
+            <button class="btn btn-danger btn-small"
+              onclick="hapusBarang(${b.id})">Hapus</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  document.getElementById("subtotal").textContent = rupiah(hitungSubtotal());
+  document.getElementById("diskonTampil").textContent = diskonAktif + "%";
+  document.getElementById("totalAkhir").textContent = rupiah(hitungTotal());
+  document.getElementById("totalBayar").textContent = rupiah(hitungTotal());
+}
+
+/* ===== DISKON ===== */
+
+function terapkanDiskon() {
+  const nilai = Number(document.getElementById("inputDiskon").value);
+
+  if (!Number.isFinite(nilai) || nilai < 0 || nilai > 100) {
+    alert("Diskon harus antara 0 sampai 100 persen.");
+    return;
+  }
+
+  diskonAktif = nilai;
+
+  document.getElementById("statusDiskon").textContent =
+    "Diskon saat ini: " + diskonAktif + "%";
+
+  tampilkanKeranjang();
+  alert("Diskon berhasil diterapkan.");
+}
+
+function hapusDiskon() {
+  diskonAktif = 0;
+  document.getElementById("inputDiskon").value = "";
+  document.getElementById("statusDiskon").textContent = "Diskon saat ini: 0%";
+  tampilkanKeranjang();
+  alert("Diskon berhasil dihapus.");
+}
+
+/* ===== PEMBAYARAN ===== */
+
+function hitungKembalian() {
+  const uang = Number(document.getElementById("uangBayar").value) || 0;
+  const kembali = uang - hitungTotal();
+
+  document.getElementById("kembalian").textContent =
+    rupiah(Math.max(0,kembali));
+}
+
+function prosesPembayaran() {
+  if (!kasirAktif) {
+    alert("Silakan login terlebih dahulu.");
+    return;
+  }
+
+  if (keranjang.length === 0) {
+    alert("Keranjang masih kosong.");
+    bukaHalaman("kasir");
+    return;
+  }
+
+  const nama = document.getElementById("namaPembeli").value.trim();
+  const uang = Number(document.getElementById("uangBayar").value);
+  const total = hitungTotal();
+
+  if (!nama) {
+    alert("Nama pembeli harus diisi.");
+    return;
+  }
+
+  if (!Number.isFinite(uang) || uang < total) {
+    alert("Uang pembayaran kurang atau belum diisi.");
+    return;
+  }
+
+  const sekarang = new Date();
+
+  const transaksi = {
+    nomor:Date.now(),
+    waktu:sekarang.toISOString(),
+    tanggal:sekarang.toLocaleString("id-ID"),
+    namaPembeli:nama,
+
+    kasir:kasirAktif.username,
+    namaKasir:kasirAktif.nama,
+
+    barang:keranjang.map(b => ({
+      nama:b.nama,
+      harga:b.harga,
+      jumlah:b.jumlah
+    })),
+
+    subtotal:hitungSubtotal(),
+    diskon:diskonAktif,
+    potongan:hitungPotongan(),
+    total:total,
+    uang:uang,
+    kembalian:uang-total
+  };
+
+  riwayat = ambilRiwayat();
+  riwayat.unshift(transaksi);
+  simpanRiwayat();
+
+  tampilkanStruk(transaksi);
+
+  keranjang = [];
+  diskonAktif = 0;
+
+  document.getElementById("namaPembeli").value = "";
+  document.getElementById("uangBayar").value = "";
+  document.getElementById("kembalian").textContent = rupiah(0);
+
+  tampilkanKeranjang();
+  perbaruiRingkasan();
+
+  alert("Pembayaran berhasil disimpan!");
+}
+
+function tampilkanStruk(t) {
+  const daftar = t.barang || [];
+
+  const isi = `
+    <p><strong>No. Transaksi:</strong> ${t.nomor}</p>
+    <p><strong>Nama Pembeli:</strong> ${escapeHTML(t.namaPembeli || "-")}</p>
+    <p><strong>Kasir:</strong> ${escapeHTML(t.namaKasir || t.kasir || "-")}</p>
+    <p><strong>Waktu:</strong> ${escapeHTML(t.tanggal || "-")}</p>
+    <hr>
+    ${daftar.map(b => `
+      <div style="display:flex;justify-content:space-between;gap:8px">
+        <span>${escapeHTML(b.nama)} (${b.jumlah}x)</span>
+        <strong>${rupiah(b.harga*b.jumlah)}</strong>
+      </div>
+    `).join("")}
+    <hr>
+    <div class="total-line"><span>Subtotal</span><strong>${rupiah(t.subtotal)}</strong></div>
+    <div class="total-line"><span>Diskon (${t.diskon || 0}%)</span><strong>${rupiah(t.potongan)}</strong></div>
+    <div class="total-line"><span>Total</span><strong>${rupiah(t.total)}</strong></div>
+    <div class="total-line"><span>Uang Bayar</span><strong>${rupiah(t.uang)}</strong></div>
+    <div class="total-line"><span>Kembalian</span><strong>${rupiah(t.kembalian)}</strong></div>
+    <hr>
+    <p style="text-align:center">Terima kasih 🙏</p>
+  `;
+
+  document.getElementById("isiStruk").innerHTML = isi;
+  document.getElementById("struk").style.display = "block";
+  document.getElementById("tombolCetak").style.display = "block";
+}
+
+/* ===== RIWAYAT ===== */
+
+function tampilkanRiwayat() {
+  riwayat = ambilRiwayat();
+
+  const nama = document.getElementById("cariNama").value.trim().toLowerCase();
+  const kasir = document.getElementById("cariKasir").value.trim().toLowerCase();
+  const tanggal = document.getElementById("cariTanggal").value;
+  const bulan = document.getElementById("cariBulan").value;
+  const tahun = document.getElementById("cariTahun").value.trim();
+
+  const hasil = riwayat.filter(t => {
+    const waktu = waktuTransaksi(t);
+
+    const cocokNama = String(t.namaPembeli || "").toLowerCase().includes(nama);
+    const cocokKasir = String(t.namaKasir || t.kasir || "").toLowerCase().includes(kasir);
+    const cocokTanggal = !tanggal || (waktu && tanggalKunci(waktu) === tanggal);
+    const cocokBulan = bulan === "" || (waktu && waktu.getMonth() === Number(bulan));
+    const cocokTahun = tahun === "" || (waktu && waktu.getFullYear() === Number(tahun));
+
+    return cocokNama && cocokKasir && cocokTanggal && cocokBulan && cocokTahun;
+  });
+
+  const wadah = document.getElementById("daftarRiwayat");
+
+  if (hasil.length === 0) {
+    wadah.innerHTML = '<div class="empty">Tidak ada transaksi yang cocok.</div>';
+    return;
+  }
+
+  wadah.innerHTML = hasil.map(t => {
+    const daftarBarang = Array.isArray(t.barang) ? t.barang : [];
+
+    return `
+      <div class="history-item">
+        <strong>${escapeHTML(t.namaPembeli || "Pembeli lama")}</strong>
+        <div class="muted">${escapeHTML(t.tanggal || "-")}</div>
+        <div class="muted">Kasir: ${escapeHTML(t.namaKasir || t.kasir || "Data lama")}</div>
+
+        <div style="margin:7px 0">
+          ${daftarBarang.map(b => `
+            <div>${escapeHTML(b.nama)} × ${b.jumlah}</div>
+          `).join("")}
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <strong style="color:var(--teal)">${rupiah(t.total)}</strong>
+          <button class="btn btn-danger btn-small"
+            onclick="hapusRiwayat(${Number(t.nomor)})">Hapus</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+function resetPencarian() {
+  document.getElementById("cariNama").value = "";
+  document.getElementById("cariKasir").value = "";
+  document.getElementById("cariTanggal").value = "";
+  document.getElementById("cariBulan").value = "";
+  document.getElementById("cariTahun").value = "";
+  tampilkanRiwayat();
+}
+
+function hapusRiwayat(nomor) {
+  if (!confirm("Yakin ingin menghapus transaksi ini? Data tidak bisa dikembalikan.")) return;
+
+  riwayat = ambilRiwayat().filter(t => Number(t.nomor) !== Number(nomor));
+  simpanRiwayat();
+  tampilkanRiwayat();
+  perbaruiRingkasan();
+}
+
+/* ===== MULAI APLIKASI ===== */
+
+riwayat = ambilRiwayat();
+tampilkanKeranjang();
+periksaLoginAwal();
+perbaruiJam();
+setInterval(perbaruiJam,1000);
+</script>
+
+</body>
+</html>
